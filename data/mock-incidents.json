@@ -1,0 +1,6 @@
+[
+  { "id": "1", "type": "sos", "lat": 6.46, "lng": 3.41, "note": "Engine failure, 4 persons onboard - Makoko" },
+  { "id": "2", "type": "hazard", "lat": 6.44, "lng": 3.38, "note": "Floating debris reported" },
+  { "id": "3", "type": "sighting", "lat": 6.47, "lng": 3.45, "note": "Patrol sighting - Badagry channel" },
+  { "id": "4", "type": "sos", "lat": 6.42, "lng": 3.5, "note": "Capsize drill report - Epe" }
+]
