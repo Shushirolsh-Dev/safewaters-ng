@@ -69,3 +69,35 @@ a { color: var(--sky); }
 @keyframes drift { from { transform: translateX(0); } to { transform: translateX(80px); } }
 .waves { animation: drift 5s linear infinite; }
 @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } .grid3 { grid-template-columns: 1fr; } }
+@media (min-width: 761px) { .sub-below { display: none; } }
+/* subtitles: overlay on desktop, below video on mobile */
+.sub-below { display: none; background: #041c2e; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 15px; line-height: 1.55; text-align: center; margin-top: 10px; }
+@media (max-width: 760px) {
+  .wrap { padding: 0 14px; }
+  .nav-inner { gap: 12px; padding: 10px 12px; }
+  .brand { font-size: 16px; white-space: nowrap; }
+  .nav-links { gap: 12px; overflow-x: auto; white-space: nowrap; padding-bottom: 2px; }
+  .nav-links a { font-size: 13px; flex-shrink: 0; }
+  .nav-cta { padding: 8px 12px; }
+  .hero { padding: 44px 0 20px; }
+  .hero p.sub { font-size: 16px; }
+  .btn, .btn-ghost { padding: 14px 18px; font-size: 14px; }
+  .btn-row { gap: 10px; }
+  .btn-row .btn, .btn-row .btn-ghost { flex: 1 1 100%; text-align: center; }
+  .section { padding: 24px 0; }
+  .section h2 { font-size: 23px; }
+  .stats { gap: 10px; margin: 28px 0; }
+  .stat b { font-size: 20px; }
+  .card { padding: 18px; }
+  .panel { padding: 16px; }
+  .big-btns { gap: 10px; }
+  .big-btns button { flex: 1 1 45%; padding: 16px 10px; font-size: 15px; }
+  .mapbox { height: 300px; }
+  .phone { padding: 12px; border-radius: 20px; min-height: 0; }
+  .phone-screen h3, .player h3 { font-size: 18px; }
+  .sub-overlay { display: none; }
+  .sub-below { display: block; }
+  .cap { font-size: 14px; }
+  .video-cap { font-size: 13px; }
+  .footer { font-size: 12px; }
+}

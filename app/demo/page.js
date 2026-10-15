@@ -174,10 +174,11 @@ export default function DemoPage() {
                 </g>
               )}
             </svg>
-            <div style={{ position: "absolute", left: 12, right: 12, bottom: 12, background: "rgba(0,0,0,0.78)", borderRadius: 8, padding: "10px 14px", fontSize: 15, lineHeight: 1.5, textAlign: "center" }}>
+            <div className="sub-overlay" style={{ position: "absolute", left: 12, right: 12, bottom: 12, background: "rgba(0,0,0,0.78)", borderRadius: 8, padding: "10px 14px", fontSize: 15, lineHeight: 1.5, textAlign: "center" }}>
               {LINES[sceneIdx].line}
             </div>
           </div>
+          <div className="sub-below">{LINES[sceneIdx].line}</div>
           {smsLines.length > 0 && (
             <div style={{ marginTop: 8, display: "grid", gap: 6 }}>
               {smsLines.map((s, k) => (
