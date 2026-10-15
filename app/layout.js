@@ -1,6 +1,8 @@
+import "./globals.css";
+
 export const metadata = {
   title: "SafeWaters NG - Small-craft safety for Nigeria",
-  description: "Phone-GPS safety net for artisanal fishers and boat operators",
+  description: "Phone-GPS safety net for artisanal fishers and boat operators. NIMASA Hackathon 2026.",
 };
 
 export default function RootLayout({ children }) {
@@ -11,13 +13,24 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#06283d" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif", background: "#06283d", color: "#fff" }}>
-        <nav style={{ padding: "12px 16px", display: "flex", gap: 16, borderBottom: "1px solid #123" }}>
-          <a href="/" style={{ color: "#fff", fontWeight: 800, textDecoration: "none" }}>SafeWaters NG</a>
-          <a href="/trip" style={{ color: "#9fd8ff" }}>Trip</a>
-          <a href="/map" style={{ color: "#9fd8ff" }}>Live Map</a>
-        </nav>
-        <main style={{ padding: 16, maxWidth: 720, margin: "0 auto" }}>{children}</main>
+      <body>
+        <div className="nav">
+          <div className="nav-inner">
+            <a className="brand" href="/"><span className="brand-dot" />SafeWaters NG</a>
+            <div className="nav-links">
+              <a href="/trip">Live Trip</a>
+              <a href="/map">Incident Map</a>
+              <a href="/demo">Video Demo</a>
+              <a className="nav-cta" href="/trip">Try SOS Demo</a>
+            </div>
+          </div>
+        </div>
+        <div className="wrap">{children}</div>
+        <div className="wrap">
+          <div className="footer">
+            SafeWaters NG — built for NIMASA National Innovation Hackathon 2026 · Tracks: Safety &amp; Surveillance, Artisanal Fishing, Ocean Data · Pilot: Lagos Lagoon
+          </div>
+        </div>
       </body>
     </html>
   );

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<rect width="1280" height="720" fill="#06283d"/>
+<path d="M0 560 Q300 500 520 430 T1280 300" stroke="#1c4a6b" stroke-width="4" fill="none" stroke-dasharray="14 10"/>
+<circle cx="300" cy="510" r="12" fill="#17a398"/><circle cx="430" cy="465" r="12" fill="#17a398"/><circle cx="560" cy="415" r="12" fill="#17a398"/>
+<circle cx="900" cy="330" r="26" fill="#e63946"/>
+<text x="900" y="340" text-anchor="middle" font-size="22" font-weight="bold" fill="#fff">SOS</text>
+<text x="640" y="180" text-anchor="middle" font-size="64" font-weight="800" fill="#ffffff">SafeWaters NG</text>
+<text x="640" y="240" text-anchor="middle" font-size="30" fill="#9fd8ff">45-second demo — a Makoko trip, an SOS, a rescue</text>
+<rect x="560" y="420" width="160" height="64" rx="32" fill="#e63946"/>
+<text x="640" y="461" text-anchor="middle" font-size="30" font-weight="bold" fill="#fff">▶ Play</text>
+</svg>

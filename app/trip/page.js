@@ -4,81 +4,74 @@ import { useEffect, useRef, useState } from "react";
 export default function TripPage() {
   const [points, setPoints] = useState([]);
   const [active, setActive] = useState(false);
-  const [status, setStatus] = useState("Idle - press Start Trip");
+  const [startedAt, setStartedAt] = useState(null);
+  const [status, setStatus] = useState("Idle — press Start Trip to begin logging GPS breadcrumbs.");
   const watchId = useRef(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem("safewaters_trip");
-    if (saved) setPoints(JSON.parse(saved));
+    try {
+      const saved = localStorage.getItem("safewaters_trip");
+      if (saved) setPoints(JSON.parse(saved));
+    } catch {}
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("safewaters_trip", JSON.stringify(points));
-  }, [points]);
+    try { localStorage.setItem("safewaters_trip", JSON.stringify(points)); } catch {}
+  }, [points ]);
 
   const start = () => {
-    if (!("geolocation" in navigator)) {
-      setStatus("GPS not available on this device");
-      return;
-    }
-    setActive(true);
-    setStatus("Tracking... breadcrumb every 10s");
+    if (!("geolocation" in navigator)) { setStatus("GPS not available on this device."); return; }
+    setActive(true); setStartedAt(Date.now());
+    setStatus("Tracking — breadcrumb saved every fix. Fully offline-capable.");
     watchId.current = navigator.geolocation.watchPosition(
-      (pos) => {
-        const p = { lat: pos.coords.latitude, lng: pos.coords.longitude, t: Date.now() };
-        setPoints((prev) => [...prev, p]);
-      },
+      (pos) => setPoints((p) => [...p, { lat: pos.coords.latitude, lng: pos.coords.longitude, t: Date.now() }]),
       (err) => setStatus("GPS error: " + err.message),
       { enableHighAccuracy: true }
     );
   };
-
   const stop = () => {
     if (watchId.current) navigator.geolocation.clearWatch(watchId.current);
-    setActive(false);
-    setStatus(`Trip saved. ${points.length} points.`);
+    setActive(false); setStatus(`Trip saved — ${points.length} breadcrumbs stored on-device.`);
   };
-
   const sos = async () => {
     const last = points[points.length - 1] || { lat: 6.45, lng: 3.4 };
-    setStatus("Sending SOS...");
+    setStatus("Sending SOS with last GPS fix…");
     try {
-      const res = await fetch("/api/sos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lat: last.lat, lng: last.lng, note: "SOS from demo trip" }),
-      });
+      const res = await fetch("/api/sos", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ lat: last.lat, lng: last.lng, note: "SOS from live trip demo" }) });
       const data = await res.json();
-      setStatus(`SOS logged: ${data.id} (SMS stub: ${data.sms})`);
+      setStatus(`SOS logged: ${data.id} — SMS ${data.sms}.`);
     } catch {
-      const logs = JSON.parse(localStorage.getItem("safewaters_sos") || "[]");
-      logs.push({ ...last, t: Date.now(), offline: true });
-      localStorage.setItem("safewaters_sos", JSON.stringify(logs));
-      setStatus("Offline - SOS queued locally, will send by SMS when signal returns.");
+      const q = JSON.parse(localStorage.getItem("safewaters_sos") || "[]");
+      q.push({ ...last, t: Date.now(), offline: true });
+      localStorage.setItem("safewaters_sos", JSON.stringify(q));
+      setStatus("Offline — SOS queued on-device, will send by SMS when signal returns.");
     }
   };
 
+  const last = points[points.length - 1];
+  const mins = startedAt ? Math.floor((Date.now() - startedAt) / 60000) : 0;
+
   return (
-    <div>
-      <h2>Trip Tracker (PWA demo)</h2>
-      <p>{status}</p>
-      <div style={{ display: "flex", gap: 12, margin: "16px 0" }}>
-        {!active ? (
-          <button onClick={start} style={red}>Start Trip</button>
-        ) : (
-          <button onClick={stop} style={ghost}>End Trip</button>
-        )}
-        <button onClick={sos} style={sosBtn}>SOS</button>
-        <button onClick={() => { setPoints([]); localStorage.removeItem("safewaters_trip"); }} style={ghost}>Clear</button>
+    <div className="section">
+      <span className="pill">LIVE TRIP DEMO</span>
+      <h2>Small-boat trip tracker</h2>
+      <p className="lead">This is exactly what judges will tap: start, sail, SOS. Works on a ₦40k Android.</p>
+      <div className="panel">
+        <div><span className="status-dot" style={{ background: active ? "#17a398" : "#5b748a" }} />{status}</div>
+        <div className="big-btns">
+          {!active ? <button className="btn" onClick={start}>Start Trip</button>
+                   : <button className="btn-ghost" onClick={stop}>End Trip</button>}
+          <button onClick={sos} style={{ background: "#ffb703", color: "#1a1a1a" }}>SOS — Send distress</button>
+          <button className="btn-ghost" onClick={() => { setPoints([]); try { localStorage.removeItem("safewaters_trip"); } catch {} }}>Clear</button>
+        </div>
+        <div className="stats" style={{ margin: "12px 0" }}>
+          <div className="stat"><b>{points.length}</b><span>breadcrumbs</span></div>
+          <div className="stat"><b>{active ? mins + " min" : "—"}</b><span>trip time</span></div>
+          <div className="stat"><b>{last ? last.lat.toFixed(4) : "—"}</b><span>last lat</span></div>
+          <div className="stat"><b>{last ? last.lng.toFixed(4) : "—"}</b><span>last lng</span></div>
+        </div>
+        <div className="log"><pre style={{ margin: 0 }}>{JSON.stringify(points.slice(-10), null, 2) || "[]"}</pre></div>
       </div>
-      <p>Points: {points.length}</p>
-      <pre style={{ background: "#0a3a5a", padding: 12, borderRadius: 8, overflow: "auto", maxHeight: 240 }}>
-        {JSON.stringify(points.slice(-10), null, 2)}
-      </pre>
-      <p style={{ opacity: 0.8 }}>Vibe-note: on a real phone this uses GPS. On desktop it will prompt for location.</p>
     </div>
   );
 }
-const red = { background: "#e63946", color: "#fff", border: 0, padding: "12px 18px", borderRadius: 8, fontWeight: 700 };
-const ghost = { background: "transparent", color: "#9fd8ff", border: "1px solid #9fd8ff", padding: "12px 18px", borderRadius: 8 };
-const sosBtn = { background: "#ffb703", color: "#000", border: 0, padding: "12px 18px", borderRadius: 8, fontWeight: 800 };
