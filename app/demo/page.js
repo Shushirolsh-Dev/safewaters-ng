@@ -27,37 +27,49 @@ const lerp = (a, b, f) => [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f];
 
 // One narration line per scene. Subtitles show these; voiceover speaks them.
 const LINES = [
-  { to: 8, line: "6:04 AM, Makoko. Musa taps Start Trip, and logging begins. No network. No extra hardware." },
-  { to: 18, line: "Mid-lagoon, zero bars. The phone keeps recording. That trail becomes a record banks can trust." },
-  { to: 28, line: "Engine failure. One tap — SOS goes out by data, or by SMS where there is no signal." },
-  { to: 38, line: "The whole lagoon sees the red pin. His cooperative, nearby canoes, responders — one map." },
-  { to: 99, line: "Every trip is data that earns. Five hundred fishers. Lagos Lagoon. That is the pilot." },
+  { to: 8, line: "It's 6:04 in the morning, Makoko. Musa taps Start Trip — and just like that, his canoe is on the map. No network. No extra device." },
+  { to: 18, line: "Mid-lagoon now, zero bars. The phone keeps recording every fix. That dotted trail? That's a trip record a bank can actually trust." },
+  { to: 28, line: "Then — engine failure. One tap on SOS, and his last position goes out. Data where there's signal, SMS where there's none." },
+  { to: 38, line: "Seconds later, the whole lagoon sees the red pin. His cooperative, nearby canoes, the responders — everybody's looking at one map." },
+  { to: 99, line: "And every trip is data that earns. Five hundred fishers, Lagos Lagoon. That's the pilot." },
 ];
 
-function pickVoice() {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return null;
-  const vs = window.speechSynthesis.getVoices();
-  return vs.find((v) => v.lang === "en-NG")
-    || vs.find((v) => v.lang && v.lang.startsWith("en") && /male|daniel|arthur|george/i.test(v.name))
-    || vs.find((v) => v.lang && v.lang.startsWith("en-GB"))
-    || vs.find((v) => v.lang && v.lang.startsWith("en"))
-    || null;
+function englishVoices() {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return [];
+  return window.speechSynthesis.getVoices().filter((v) => v.lang && v.lang.toLowerCase().startsWith("en"));
+}
+function scoreVoice(v) {
+  let s = 0;
+  if (v.lang === "en-NG") s += 4;
+  if (/natural/i.test(v.name)) s += 3;
+  if (/google/i.test(v.name)) s += 2;
+  if (/en[-_]US/i.test(v.lang)) s += 1;
+  return s;
 }
 
 export default function DemoPage() {
   const [t, setT] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [voiceOn, setVoiceOn] = useState(false);
-  const [hasSpeech, setHasSpeech] = useState(false);
+  const [voices, setVoices] = useState([]);
+  const [voiceURI, setVoiceURI] = useState("");
+  const hasSpeech = voices.length > 0;
   const raf = useRef(null);
   const lastTs = useRef(0);
 
   useEffect(() => {
-    if ("speechSynthesis" in window) {
-      setHasSpeech(true);
-      window.speechSynthesis.getVoices();
-    }
-    return () => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); };
+    if (!("speechSynthesis" in window)) return;
+    const load = () => {
+      const vs = englishVoices().sort((a, b) => scoreVoice(b) - scoreVoice(a));
+      setVoices(vs);
+      setVoiceURI((cur) => cur || (vs[0] ? vs[0].voiceURI : ""));
+    };
+    load();
+    window.speechSynthesis.onvoiceschanged = load;
+    return () => {
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.onvoiceschanged = null;
+    };
   }, []);
   useEffect(() => () => cancelAnimationFrame(raf.current), []);
   useEffect(() => {
@@ -82,14 +94,15 @@ export default function DemoPage() {
   // speak the line whenever the scene changes and voice is on
   useEffect(() => {
     if (!voiceOn || !hasSpeech) return;
-    const v = pickVoice();
+    const v = voices.find((x) => x.voiceURI === voiceURI) || voices[0];
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(LINES[sceneIdx].line);
-    if (v) u.voice = v;
-    u.rate = 0.98;
+    if (v) { u.voice = v; u.lang = v.lang; }
+    u.rate = 0.96;
+    u.pitch = 1;
     window.speechSynthesis.speak(u);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sceneIdx, voiceOn]);
+  }, [sceneIdx, voiceOn, voiceURI]);
 
   const toggleVoice = () => {
     if (voiceOn && hasSpeech) window.speechSynthesis.cancel();
@@ -194,6 +207,14 @@ export default function DemoPage() {
           {!playing && t > 0 && <button className="btn-ghost" onClick={() => { setT(0); setPlaying(true); }}>↻ Replay</button>}
           {hasSpeech && <button className="btn-ghost" onClick={toggleVoice}>{voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>}
         </div>
+        {voiceOn && voices.length > 1 && (
+          <div style={{ textAlign: "center", marginBottom: 10 }}>
+            <select value={voiceURI} onChange={(e) => setVoiceURI(e.target.value)} style={{ background: "#041c2e", color: "#fff", border: "1px solid #1c4a6b", borderRadius: 8, padding: "10px 12px", fontSize: 14, maxWidth: "100%" }}>
+              {voices.map((v) => (<option key={v.voiceURI} value={v.voiceURI}>{v.name} ({v.lang})</option>))}
+            </select>
+            <div style={{ color: "#8aa5bb", fontSize: 12, marginTop: 4 }}>Pick the most human-sounding voice on this device, then replay.</div>
+          </div>
+        )}
         <input type="range" min="0" max={T} step="0.1" value={t} onChange={(e) => { setPlaying(false); setT(Number(e.target.value)); }} style={{ width: "100%" }} />
         <div style={{ textAlign: "center", color: "#8aa5bb", fontSize: 13 }}>{t.toFixed(1)}s / {T}s</div>
       </div>
