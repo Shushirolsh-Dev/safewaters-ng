@@ -5,7 +5,7 @@ export default function TripPage() {
   const [points, setPoints] = useState([]);
   const [active, setActive] = useState(false);
   const [startedAt, setStartedAt] = useState(null);
-  const [status, setStatus] = useState("Idle — press Start Trip to begin logging GPS breadcrumbs.");
+  const [status, setStatus] = useState("Ready — start a trip to log GPS breadcrumbs.");
   const watchId = useRef(null);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function TripPage() {
     <div className="section">
       <span className="pill">LIVE TRIP DEMO</span>
       <h2>Small-boat trip tracker</h2>
-      <p className="lead">This is exactly what judges will tap: start, sail, SOS. Works on a ₦40k Android.</p>
+      <p className="lead">For the boats AIS cannot see. Start a trip, sail, hit SOS if anything goes wrong.</p>
       <div className="panel">
         <div><span className="status-dot" style={{ background: active ? "#17a398" : "#5b748a" }} />{status}</div>
         <div className="big-btns">

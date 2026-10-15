@@ -10,7 +10,7 @@ export default function Home() {
         </p>
         <div className="btn-row">
           <a className="btn" href="/trip">Try the live SOS demo</a>
-          <a className="btn-ghost" href="/demo">Watch 45-sec demo</a>
+          <a className="btn-ghost" href="/demo">Watch the film</a>
         </div>
         <div className="stats">
           <div className="stat"><b>200k+</b><span>small boats invisible to AIS</span></div>
@@ -21,21 +21,21 @@ export default function Home() {
       </div>
 
       <div className="section">
-        <h2>Demo video</h2>
+        <h2>The film</h2>
         <p className="lead">45 seconds: a Makoko fishing trip, an engine failure, an SOS, a rescue map.</p>
         <div className="video-shell">
           <video controls preload="metadata" poster="/demo-poster.svg">
             <source src="/demo.mp4" type="video/mp4" />
           </video>
           <div className="video-cap">
-            <span>No MP4 yet — record the interactive demo on your phone and drop it in as <b>public/demo.mp4</b>.</span>
-            <a className="btn" href="/demo">Play interactive demo</a>
+            <span>Full film with voiceover and subtitles.</span>
+            <a className="btn" href="/demo">Play it here</a>
           </div>
         </div>
       </div>
 
       <div className="section">
-        <h2>The problem NIMASA pays to solve</h2>
+        <h2>The problem</h2>
         <p className="lead">Deep Blue protects big vessels. Small crafts — where most deaths happen — have nothing.</p>
         <div className="grid3">
           <div className="card"><h3>Capsizes go unreported</h3><p>No AIS, no radio on canoes. Missing boats are noticed hours later, when it is too late.</p></div>
@@ -59,7 +59,7 @@ export default function Home() {
       </div>
 
       <div className="section">
-        <h2>Built to earn, not just to win</h2>
+        <h2>How it makes money</h2>
         <div className="grid3">
           <div className="card"><h3>₦500/mo cooperatives</h3><p>Fleet dashboard, member trips, incident history for fishing cooperatives.</p></div>
           <div className="card"><h3>Insurance API</h3><p>Verified trip data insurers can price micro-cover against. Revenue share per policy.</p></div>
@@ -72,7 +72,7 @@ export default function Home() {
           <h2 style={{ marginTop: 0 }}>Pilot: 500 fishers, Lagos Lagoon</h2>
           <p className="lead">Makoko → Badagry → Epe. One cooperative, one responder partner, 90 days. Success = 2,000 logged trips, SOS response under 30 minutes.</p>
           <div className="btn-row" style={{ justifyContent: "flex-start" }}>
-            <a className="btn" href="/trip">Run the demo judges will run</a>
+            <a className="btn" href="/trip">Run the SOS demo</a>
             <a className="btn-ghost" href="/map">See the incident map</a>
           </div>
         </div>

@@ -23,7 +23,7 @@ export default function MapPage() {
     <div className="section">
       <span className="pill">SHARED RESCUE MAP</span>
       <h2>Lagos Lagoon — live incidents</h2>
-      <p className="lead">One map for fishers, cooperatives, patrols and responders. Mock data for the demo.</p>
+      <p className="lead">Every SOS, hazard and patrol sighting lands here — one picture for fishers, cooperatives and responders.</p>
       <div className="legend">
         <span>🔴 SOS distress</span><span>🟡 Hazard</span><span>🟢 Patrol sighting</span>
       </div>
