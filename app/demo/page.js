@@ -207,14 +207,6 @@ export default function DemoPage() {
           {!playing && t > 0 && <button className="btn-ghost" onClick={() => { setT(0); setPlaying(true); }}>↻ Replay</button>}
           {hasSpeech && <button className="btn-ghost" onClick={toggleVoice}>{voiceOn ? "🔊 Voice on" : "🔇 Voice off"}</button>}
         </div>
-        {voiceOn && voices.length > 1 && (
-          <div style={{ textAlign: "center", marginBottom: 10 }}>
-            <select value={voiceURI} onChange={(e) => setVoiceURI(e.target.value)} style={{ background: "#041c2e", color: "#fff", border: "1px solid #1c4a6b", borderRadius: 8, padding: "10px 12px", fontSize: 14, maxWidth: "100%" }}>
-              {voices.map((v) => (<option key={v.voiceURI} value={v.voiceURI}>{v.name} ({v.lang})</option>))}
-            </select>
-            <div style={{ color: "#8aa5bb", fontSize: 12, marginTop: 4 }}>Pick the most human-sounding voice on this device, then replay.</div>
-          </div>
-        )}
         <input type="range" min="0" max={T} step="0.1" value={t} onChange={(e) => { setPlaying(false); setT(Number(e.target.value)); }} style={{ width: "100%" }} />
         <div style={{ textAlign: "center", color: "#8aa5bb", fontSize: 13 }}>{t.toFixed(1)}s / {T}s</div>
       </div>
